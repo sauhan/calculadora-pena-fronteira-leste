@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculadora de Pena - Fronteira Leste</title>
+    <meta name="description" content="Calculadora de penas baseada no Código Penal de Fronteira Leste.">
+    <meta name="author" content="Seu Nome ou Nickname">
+    <style>
+        :root {
+            --primary-color: #0056b3;
+            --primary-hover-color: #004494;
+            --background-color: #f4f4f4;
+            --container-bg-color: #ffffff;
+            --text-color: #333;
+            --border-color: #dddddd;
+            --results-bg-color: #e9ecef;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            margin: 0;
+            min-height: 100vh;
+        }
+        .container {
+            background: var(--container-bg-color);
+            padding: 25px 30px;
+            border-radius: 8px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 100%;
+            max-width: 700px;
+        }
+        h1, h2 {
+            text-align: center;
+            color: var(--text-color);
+            margin-bottom: 0.5em;
+        }
+        h1 {
+            font-size: 2em;
+        }
+        h2 {
+            font-size: 1.5em;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-top: 20px;
+        }
+        .form-group {
+            margin-bottom: 20px;
+        }
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+        #crime-list {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            padding: 10px;
+            border-radius: 5px;
+            background-color: #fafafa;
+        }
+        .crime-item label, .checkbox-group label {
+            font-weight: normal;
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+            cursor: pointer;
+        }
+        .crime-item input, .checkbox-group input {
+            margin-right: 10px;
+            min-width: 16px;
+            min-height: 16px;
+        }
+        button {
+            width: 100%;
+            padding: 12px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            margin-top: 20px;
+            border-radius: 5px;
+            transition: background-color 0.3s ease;
+        }
+        button:hover {
+            background-color: var(--primary-hover-color);
+        }
+        #results {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: var(--results-bg-color);
+            border-radius: 5px;
+            border: 1px solid var(--border-color);
+        }
+        ul {
+            padding-left: 20px;
+            margin-top: 5px;
+        }
+        hr {
+            border: none;
+            border-top: 1px solid var(--border-color);
+            margin: 15px 0;
+        }
+        .citation {
+            font-size: 0.8em;
+            color: #6c757d;
+            text-align: center;
+            display: block;
+            margin-top: 15px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>Calculadora de Pena</h1>
+        <p style="text-align: center; margin-top:-10px; margin-bottom: 20px;">Baseada no Código Penal de Fronteira Leste</p>
+
+        <div class="form-group">
+            <label>Selecione os Crimes Com cometidos:</label>
+            <div id="crime-list">
+                </div>
+        </div>
+
+        <div class="form-group">
+            <h2>Atenuantes</h2>
+            <div class="checkbox-group">
+                <label>
+                    <input type="checkbox" id="miranda"> Omissão do Aviso de Miranda (Redução de 30%)
+                </label>
+                <label>
+                    <input type="checkbox" id="advogado"> Assistência Jurídica (Advogado) (Redução de 30%)
+                </label>
+                <label>
+                    <input type="checkbox" id="reuPrimario"> Réu Primário (Redução de 30%)
+                </label>
+                <label>
+                    <input type="checkbox" id="confissao"> Confissão do Crime (Redução de 10%)
+                </label>
+                 <label>
+                    <input type="checkbox" id="colaboracao"> Colaboração com o Processo (Redução de 10%)
+                </label>
+            </div>
+        </div>
+
+        <button onclick="calculatePenalty()">Calcular Pena Final</button>
+
+        <div id="results">
+            <h3>Resultado</h3>
+            <p>Selecione um ou mais crimes e os atenuantes aplicáveis, depois clique em calcular.</p>
+        </div>
+         <p class="citation">
+            A redução máxima de pena por atenuantes é de 50%, exceto em casos de Delação Premiada. Esta calculadora não inclui Delação Premiada.
+        </p>
+    </div>
+
+<script>
+    const crimes = [
+        { name: "Atropelamento Culposo (Art. 4°)", sentence: 10, fine: "R$10.000" },
+        { name: "Atropelamento Doloso (Art. 5°)", sentence: 20, fine: "R$20.000" },
+        { name: "Atropelamento Coletivo (Art. 6°)", sentence: 35, fine: "R$35.000" },
+        { name: "Cometer Crime com Veículo Público (Art. 9°)", sentence: 20, fine: "R$45.000" },
+        { name: "Poluição Sonora (Art. 10°)", sentence: 10, fine: "R$10.000" },
+        { name: "Direção Perigosa (Art. 11°)", sentence: 15, fine: "R$15.000" },
+        { name: "Tentativa de Homicídio (Art. 12°)", sentence: 50, fine: "R$10.000" },
+        { name: "Homicídio Doloso (Art. 13°)", sentence: 60, fine: "R$20.000" },
+        { name: "Homicídio Culposo (Art. 14°)", sentence: 40, fine: "R$5.000" },
+        { name: "Homicídio a Servidor Público (Art. 15°)", sentence: 100, fine: "R$50.000" },
+        { name: "Latrocínio (Art. 16°)", sentence: 80, fine: "R$50.000" },
+        { name: "Agressão ou Lesão Corporal (Art. 17°)", sentence: 15, fine: "R$20.000" },
+        { name: "Causar Incêndio ou Explosão (Art. 18°)", sentence: 30, fine: "R$50.000" },
+        { name: "Tentativa de Sequestro (Art. 19°)", sentence: 40, fine: "R$5.000" },
+        { name: "Sequestro (Art. 20°)", sentence: 50, fine: "R$15.000" },
+        { name: "Violência contra Animais (Art. 21°)", sentence: 15, fine: "R$10.000" },
+        { name: "Omissão de Socorro (Art. 22°)", sentence: 35, fine: "R$60.000" },
+        { name: "Abandono de Incapaz (Art. 23°)", sentence: 40, fine: "R$50.000" },
+        { name: "Maus Tratos (Art. 24°)", sentence: 40, fine: "R$50.000" },
+        { name: "Calúnia (Art. 25°)", sentence: 40, fine: "R$20.000" },
+        { name: "Difamação (Art. 26°)", sentence: 40, fine: "R$20.000" },
+        { name: "Equipamento Balístico (Art. 55)", sentence: 180, fine: "R$15.000 a R$32.000" },
+        { name: "Posse de Dinheiro Sujo (Art. 56)", sentence: 180, fine: "R$15.000 a R$27.000" },
+        { name: "Ocultação Facial (Art. 57)", sentence: 180, fine: "R$5.000 a R$10.000" },
+        { name: "Obstrução Facial (Art. 58)", sentence: 420, fine: "R$50.000 a R$95.000" },
+        { name: "Posse de Coldre (Art. 59)", sentence: 180, fine: "R$5.000 a R$10.000" },
+        { name: "Posse de Algema (Art. 60)", sentence: 120, fine: "R$5.000 a R$10.000" },
+        { name: "Posse de Lockpick (Art. 61)", sentence: 120, fine: "R$5.000 a R$10.000" },
+        { name: "Posse de Capuz (Art. 62)", sentence: 120, fine: "R$5.000 a R$10.000" },
+        { name: "Placa Clonada (Art. 63)", sentence: 120, fine: "R$5.000 a R$10.000" },
+        { name: "Lavagem de Dinheiro (Art. 64)", sentence: 1200, fine: "R$200.000 a inafiançável" },
+        { name: "Posse de Subprodutos Ilícitos (Art. 65)", sentence: 120, fine: "R$5.000 a R$10.000" },
+        { name: "Posse de C4 (Art. 66)", sentence: 240, fine: "R$10.000 a R$15.000" },
+        { name: "Uso Indevido do Porte de Arma (Art. 67)", sentence: 180, fine: "R$150.000" },
+        { name: "Uso Indevido de Arma de Choque ou Branca (Art. 68)", sentence: 120, fine: "R$10.000 a inafiançável" },
+        { name: "Fuga da Abordagem (Art. 69)", sentence: 120, fine: "R$10.000 a R$15.000" },
+        { name: "Perturbação da Ordem Pública (Art. 70)", sentence: 120, fine: "R$15.000 a R$50.000" },
+        { name: "Falsidade Ideológica (Art. 71)", sentence: 300, fine: "R$15.000 a R$50.000" },
+        { name: "Exercício Ilegal da Profissão (Art. 72)", sentence: 240, fine: "R$15.000 a R$50.000" },
+        { name: "Exercer Atividade da Qual Está Proibido (Art. 73)", sentence: 480, fine: "R$35.000 a R$60.000" },
+        { name: "Abandono de Função (Art. 74)", sentence: 360, fine: "R$40.000 a R$90.000" },
+        { name: "Desobediência à Autoridade (Art. 75)", sentence: 180, fine: "R$10.000 a R$15.000" },
+        { name: "Desacato Leve (Art. 76)", sentence: 600, fine: "R$15.000 a R$45.000" },
+        { name: "Desacato Grave (Art. 77)", sentence: 960, fine: "R$50.000 a inafiançável" },
+        { name: "Tentativa de Suborno (Art. 78)", sentence: 540, fine: "R$35.000 a R$105.000" },
+        { name: "Corrupção Ativa (Art. 79)", sentence: 2400, fine: "R$1.000.000 a inafiançável" },
+        { name: "Corrupção Passiva (Art. 80)", sentence: 1200, fine: "R$450.000 a inafiançável" },
+        { name: "Improbidade Administrativa (Art. 81)", sentence: 960, fine: "R$30.000 a R$60.000" },
+        { name: "Associação Criminosa (Art. 82)", sentence: 600, fine: "R$30.000 a R$50.000" },
+        { name: "Formação de Quadrilha (Art. 83)", sentence: 1200, fine: "R$40.000 a R$60.000" },
+        { name: "Suborno (Art. 84)", sentence: 660, fine: "R$70.000 a R$210.000" },
+        { name: "Fraudar Informações (Art. 85)", sentence: 540, fine: "R$50.000 a R$100.000" },
+        { name: "Prevaricação (Art. 86)", sentence: 600, fine: "R$40.000 a R$80.000" },
+        { name: "Obstrução da Justiça (Art. 87)", sentence: 600, fine: "R$35.000 a R$105.000" },
+        { name: "Abuso de Autoridade (Art. 88)", sentence: 600, fine: "R$50.000 a inafiançável" },
+        { name: "Perjúrio, Falso Testemunho (Art. 89)", sentence: 1800, fine: "R$30.000 a R$120.000" },
+        { name: "Iniciar Investigação em Inocente (Art. 90)", sentence: 1800, fine: "R$20.000 a inafiançável" },
+        { name: "Denunciação Caluniosa (Art. 91)", sentence: 480, fine: "R$20.000 a R$40.000" },
+        { name: "Roubo a Banco Central (Art. 92)", sentence: 1200, fine: "R$80.000 a inafiançável" },
+        { name: "Roubo a Joalheria (Art. 93)", sentence: 840, fine: "R$50.000 a inafiançável" },
+        { name: "Roubo a Banco Flecca (Art. 94)", sentence: 960, fine: "R$60.000 a inafiançável" },
+        { name: "Roubo a Banco Paleto (Art. 95)", sentence: 1200, fine: "R$80.000 a inafiançável" },
+        { name: "Roubo a Nióbio (Art. 96)", sentence: 1440, fine: "R$80.000 a inafiançável" },
+        { name: "Roubo a Açougue (Art. 97)", sentence: 600, fine: "R$50.000 a inafiançável" },
+        { name: "Roubo a Galinheiro (Art. 98)", sentence: 600, fine: "R$50.000 a inafiançável" },
+        { name: "Roubo a Caixas Registradoras (Art. 99)", sentence: 120, fine: "R$5.000 a R$25.000" },
+        { name: "Roubo a Loja de Departamento (Art. 100)", sentence: 360, fine: "R$20.000 a inafiançável" },
+        { name: "Roubo a Caixa Eletrônico (ATM) (Art. 101)", sentence: 240, fine: "R$10.000 a R$30.000" },
+        { name: "Roubo a Ammunation (Art. 102)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Barbearia (Art. 103)", sentence: 180, fine: "R$5.000 a inafiançável" },
+        { name: "Roubo a Yellow Jack (Art. 104)", sentence: 600, fine: "R$5.000 a inafiançável" },
+        { name: "Corrida Ilegal (Art. 105)", sentence: 240, fine: "R$5.000 a inafiançável" },
+        { name: "Roubo a Porta-Malas (Art. 106)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Loja de Bebidas (Art. 107)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Comedy (Art. 108)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Planet (Art. 109)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Observatório (Art. 110)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Auditório (Art. 111)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a McDonalds (Art. 112)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Estábulo (Art. 113)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Delegacia (Art. 114)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Grapeseed (Art. 115)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Aeroporto Abandonado (Art. 116)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Carro Forte (Art. 117)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Nióbio - Laboratório Humane (Art. 118)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Trevor (Art. 119)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Cypress (Art. 120)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Fábrica de Cimento (Art. 121)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Millars Boat (Art. 122)", sentence: 240, fine: "R$15.000 a inafiançável" },
+        { name: "Roubo a Cemitério (Art. 123)", sentence: 240, fine: "R$15.000 a inafiançável" },
+    ];
+
+    document.addEventListener('DOMContentLoaded', () => {
+        const crimeListDiv = document.getElementById('crime-list');
+        crimes.forEach((crime, index) => {
+            const crimeDiv = document.createElement('div');
+            crimeDiv.className = 'crime-item';
+
+            const label = document.createElement('label');
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = 'crime-' + index;
+            checkbox.value = index;
+
+            label.appendChild(checkbox);
+            label.appendChild(document.createTextNode(crime.name));
+            crimeDiv.appendChild(label);
+            crimeListDiv.appendChild(crimeDiv);
+        });
+    });
+
+    function calculatePenalty() {
+        const resultsDiv = document.getElementById('results');
+        let totalSentence = 0;
+        const selectedCrimesInfo = [];
+
+        const crimeCheckboxes = document.querySelectorAll('#crime-list input[type="checkbox"]');
+        crimeCheckboxes.forEach(checkbox => {
+            if (checkbox.checked) {
+                const crimeIndex = parseInt(checkbox.value);
+                const crime = crimes[crimeIndex];
+                totalSentence += crime.sentence;
+                selectedCrimesInfo.push({ name: crime.name, fine: crime.fine });
+            }
+        });
+
+        if (totalSentence === 0) {
+            resultsDiv.innerHTML = "<h3>Resultado</h3><p>Por favor, selecione pelo menos um crime.</p>";
+            return;
+        }
+
+        let totalReduction = 0;
+        if (document.getElementById('miranda').checked) { totalReduction += 30; }
+        if (document.getElementById('advogado').checked) { totalReduction += 30; }
+        if (document.getElementById('reuPrimario').checked) { totalReduction += 30; }
+        if (document.getElementById('confissao').checked) { totalReduction += 10; }
+        if (document.getElementById('colaboracao').checked) { totalReduction += 10; }
+        
+        const cappedReduction = Math.min(totalReduction, 50);
+        const finalSentence = totalSentence * (1 - (cappedReduction / 100));
+
+        let crimesHtml = '<h4>Crimes Selecionados:</h4><ul>';
+        let multasHtml = '<h4>Multas Aplicáveis:</h4><ul>';
+        selectedCrimesInfo.forEach(crime => {
+            crimesHtml += `<li>${crime.name}</li>`;
+            multasHtml += `<li>${crime.name}: ${crime.fine}</li>`;
+        });
+        crimesHtml += '</ul>';
+        multasHtml += '</ul>';
+
+        resultsDiv.innerHTML = `
+            <h3>Resultado do Cálculo</h3>
+            ${crimesHtml}
+            ${multasHtml}
+            <hr>
+            <p><strong>Pena Base Total (soma dos crimes):</strong> ${totalSentence} meses</p>
+            <p><strong>Redução Total (soma dos atenuantes):</strong> ${totalReduction}%</p>
+            <p><strong>Redução Aplicada (com teto de 50%):</strong> ${cappedReduction}%</p>
+            <hr>
+            <p><strong>PENA FINAL: ${finalSentence.toFixed(1).replace('.',',')} meses de prisão</strong></p>
+        `;
+    }
+</script>
+
+</body>
+</html>
