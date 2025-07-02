@@ -10,6 +10,8 @@
         :root {
             --primary-color: #0056b3;
             --primary-hover-color: #004494;
+            --secondary-color: #6c757d;
+            --secondary-hover-color: #5a6268;
             --background-color: #f4f4f4;
             --container-bg-color: #ffffff;
             --text-color: #333;
@@ -105,20 +107,35 @@
             font-weight: normal;
             cursor: pointer;
         }
-        button {
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .button-group button {
             width: 100%;
             padding: 12px;
-            background-color: var(--primary-color);
             color: white;
             border: none;
             cursor: pointer;
             font-size: 16px;
             font-weight: bold;
-            margin-top: 20px;
             border-radius: 5px;
             transition: background-color 0.3s ease;
+            flex-grow: 1;
         }
-        button:hover { background-color: var(--primary-hover-color); }
+        .button-group .primary {
+             background-color: var(--primary-color);
+        }
+        .button-group .primary:hover {
+             background-color: var(--primary-hover-color);
+        }
+        .button-group .secondary {
+             background-color: var(--secondary-color);
+        }
+        .button-group .secondary:hover {
+             background-color: var(--secondary-hover-color);
+        }
         #results {
             margin-top: 20px;
             padding: 15px;
@@ -184,7 +201,10 @@
             </div>
         </div>
 
-        <button onclick="calculatePenalty()">Calcular Pena Final</button>
+        <div class="button-group">
+            <button type="button" class="secondary" onclick="clearSelection()">Limpar Seleção e Resultados</button>
+            <button type="button" class="primary" onclick="calculatePenalty()">Calcular Pena Final</button>
+        </div>
 
         <div id="results">
             <h3>Resultado</h3>
@@ -314,9 +334,9 @@
         { name: "Art. 124 - Roubo a Cypress", sentence: 20, fine: "R$15.000", bail: "Inafiançável" }
     ];
 
-    // Popula a lista de crimes ao carregar a página
     document.addEventListener('DOMContentLoaded', () => {
         const crimeListDiv = document.getElementById('crime-list');
+        // A lista já está ordenada no array, então não precisamos do sort aqui.
         crimes.forEach((crime, index) => {
             const crimeDiv = document.createElement('div');
             crimeDiv.className = 'crime-item';
@@ -345,7 +365,6 @@
         });
     });
 
-    // Função para filtrar a lista de crimes
     function filterCrimes() {
         const searchTerm = document.getElementById('searchInput').value.toLowerCase();
         const crimeItems = document.querySelectorAll('.crime-item');
@@ -359,12 +378,31 @@
         });
     }
 
-    // Função para formatar números como moeda brasileira
     function formatCurrency(value) {
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     }
+    
+    // NOVA FUNÇÃO PARA LIMPAR TUDO
+    function clearSelection() {
+        // Limpa a busca
+        document.getElementById('searchInput').value = '';
+        filterCrimes(); // Mostra todos os crimes novamente
 
-    // Função principal para calcular a pena
+        // Desmarca todos os checkboxes de crimes
+        document.querySelectorAll('#crime-list input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Desmarca todos os checkboxes de atenuantes
+        document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
+            checkbox.checked = false;
+        });
+
+        // Limpa a área de resultados
+        const resultsDiv = document.getElementById('results');
+        resultsDiv.innerHTML = "<h3>Resultado</h3><p>Selecione um ou mais crimes e os atenuantes aplicáveis, depois clique em calcular.</p>";
+    }
+
     function calculatePenalty() {
         const resultsDiv = document.getElementById('results');
         let totalSentence = 0;
@@ -431,7 +469,7 @@
         }
 
         if (bailableCrimes.length === 0 && nonBailableCrimes.length === 0) {
-             bailHtml += '<p>Nenhum crime selecionado possui fiança especificada.</p>';
+             bailHtml += '<p style="text-align:center;">Nenhum crime selecionado possui fiança especificada.</p>';
         }
 
         bailHtml += '<hr style="margin: 15px 0 10px 0;">'
