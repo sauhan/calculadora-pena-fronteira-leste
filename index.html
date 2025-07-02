@@ -180,7 +180,7 @@
 <body>
 
     <div class="container">
-        <h1>Calculadora de Pena</h1>
+        <h1>Calculadora Penal - Fronteira Leste</h1>
         <p style="text-align: center; margin-top:-10px; margin-bottom: 20px;">Código Penal da Fronteira Leste</p>
 
         <div class="form-group">
@@ -213,7 +213,8 @@
         <p class="citation">A redução máxima da pena por atenuantes é de 50%. Fiança quitada isenta da pena de prisão.</p>
     </div>
 
-<script>  
+<script>
+    // LISTA DE CRIMES COM FIANÇAS ATUALIZADAS
     const crimes = [
         { name: "Art. 4 - Atropelamento Culposo", sentence: 10, fine: "R$7.000", bail: "Inafiançável" },
         { name: "Art. 5 - Atropelamento Doloso", sentence: 20, fine: "R$9.000", bail: "Inafiançável" },
@@ -237,7 +238,7 @@
         { name: "Art. 25 - Calúnia", sentence: 20, fine: "R$5.000", bail: 40000 },
         { name: "Art. 26 - Difamação", sentence: 20, fine: "R$10.000", bail: 40000 },
         { name: "Art. 27 - Injúria", sentence: 20, fine: "R$10.000", bail: 40000 },
-        { name: "Art. 28 - Injúria Real", sentence: 20, fine: "R$15.000", bail: 0 },
+        { name: "Art. 28 - Injúria Real", sentence: 20, fine: "R$15.000", bail: 80000 },
         { name: "Art. 29 - Atentado ao Pudor", sentence: 20, fine: "R$7.500", bail: 25000 },
         { name: "Art. 30 - Assédio", sentence: 50, fine: "R$10.000", bail: 50000 },
         { name: "Art. 31 - Ameaça", sentence: 50, fine: "R$2.500", bail: 25000 },
@@ -248,12 +249,12 @@
         { name: "Art. 37 - Roubo de Automotores", sentence: 30, fine: "R$12.500", bail: 90000 },
         { name: "Art. 38 - Extorsão", sentence: 40, fine: "R$7.500", bail: "Inafiançável" },
         { name: "Art. 39 - Dano ao Patrimônio Privado", sentence: 10, fine: "R$5.000", bail: 9500 },
-        { name: "Art. 40 - Dano ao Patrimônio Público", sentence: 10, fine: "R$7.500", bail: 0 },
-        { name: "Art. 41 - Invasão a Propriedade", sentence: 25, fine: "R$2.500", bail: 0 },
-        { name: "Art. 42 - Estelionato", sentence: 40, fine: "R$10.000", bail: 0 },
-        { name: "Art. 43 - Incitar a Prática de Crime", sentence: 20, fine: "R$2.000", bail: 0 },
-        { name: "Art. 44 - Associação Criminosa", sentence: 20, fine: "R$5.000", bail: 0 },
-        { name: "Art. 45 - Formação de Quadrilha", sentence: 50, fine: "R$15.000", bail: 0 },
+        { name: "Art. 40 - Dano ao Patrimônio Público", sentence: 10, fine: "R$7.500", bail: 10000 },
+        { name: "Art. 41 - Invasão a Propriedade", sentence: 25, fine: "R$2.500", bail: 10000 },
+        { name: "Art. 42 - Estelionato", sentence: 40, fine: "R$10.000", bail: 30000 },
+        { name: "Art. 43 - Incitar a Prática de Crime", sentence: 20, fine: "R$2.000", bail: 20000 },
+        { name: "Art. 44 - Associação Criminosa", sentence: 20, fine: "R$5.000", bail: 30000 },
+        { name: "Art. 45 - Formação de Quadrilha", sentence: 50, fine: "R$15.000", bail: 50000 },
         { name: "Art. 47 - Produção de Drogas", sentence: 100, fine: "R$25.000", bail: "Inafiançável" },
         { name: "Art. 48 - Posse de drogas", sentence: 10, fine: "R$5.000", bail: 50000 },
         { name: "Art. 49 - Tráfico de drogas", sentence: 30, fine: "R$7.500", bail: 70000 },
@@ -269,42 +270,42 @@
         { name: "Art. 59 - Tráfico ilegal de munições leves", sentence: 10, fine: "R$5.000", bail: 35000 },
         { name: "Art. 60 - Tráfico ilegal de munições medias", sentence: 20, fine: "R$7.500", bail: 85000 },
         { name: "Art. 61 - Tráfico ilegal de munições pesadas", sentence: 40, fine: "R$1.000", bail: "Inafiançável" },
-        { name: "Art. 62 - Equipamento Balístico", sentence: 15, fine: "R$5.000", bail: 0 },
+        { name: "Art. 62 - Equipamento Balístico", sentence: 15, fine: "R$5.000", bail: 20000 },
         { name: "Art. 63 - Posse de Dinheiro Sujo", sentence: 15, fine: "R$5.000", bail: "Inafiançável" },
-        { name: "Art. 64 - Ocultação Facial", sentence: 15, fine: "R$3.000", bail: 0 },
-        { name: "Art. 65 - Obstrução Facial", sentence: 35, fine: "R$25.000", bail: 0 },
-        { name: "Art. 66 - Posse de Coldre", sentence: 15, fine: "R$5.000", bail: 0 },
-        { name: "Art. 67 - Posse de Algema", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 68 - Logs/Keys de Banco", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 69 - Posse de Lockpick", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 70 - Posse de Capuz", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 71 - Placa Clonada", sentence: 10, fine: "R$5.000", bail: 0 },
+        { name: "Art. 64 - Ocultação Facial", sentence: 15, fine: "R$3.000", bail: 20000 },
+        { name: "Art. 65 - Obstrução Facial", sentence: 35, fine: "R$25.000", bail: 20000 },
+        { name: "Art. 66 - Posse de Coldre", sentence: 15, fine: "R$5.000", bail: 20000 },
+        { name: "Art. 67 - Posse de Algema", sentence: 10, fine: "R$5.000", bail: 15000 },
+        { name: "Art. 68 - Logs/Keys de Banco", sentence: 10, fine: "R$5.000", bail: 70000 },
+        { name: "Art. 69 - Posse de Lockpick", sentence: 10, fine: "R$5.000", bail: 20000 },
+        { name: "Art. 70 - Posse de Capuz", sentence: 10, fine: "R$5.000", bail: 10000 },
+        { name: "Art. 71 - Placa Clonada", sentence: 10, fine: "R$5.000", bail: 40000 },
         { name: "Art. 72 - Lavagem de Dinheiro", sentence: 100, fine: "R$100.000", bail: "Inafiançável" },
-        { name: "Art. 73 - Posse de Subprodutos ilícitos", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 74 - Posse de Pólvora", sentence: 15, fine: "R$5.000", bail: 0 },
-        { name: "Art. 75 - Posse de C4", sentence: 20, fine: "R$5.000", bail: 0 },
-        { name: "Art. 76 - Uso indevido do Porte de Arma", sentence: 15, fine: "R$10.000", bail: 0 },
+        { name: "Art. 73 - Posse de Subprodutos ilícitos", sentence: 10, fine: "R$5.000", bail: 60000 },
+        { name: "Art. 74 - Posse de Pólvora", sentence: 15, fine: "R$5.000", bail: 20000 },
+        { name: "Art. 75 - Posse de C4", sentence: 20, fine: "R$5.000", bail: 40000 },
+        { name: "Art. 76 - Uso indevido do Porte de Arma", sentence: 15, fine: "R$10.000", bail: 50000 },
         { name: "Art. 77 - Uso indevido de Arma de Choque ou Branca", sentence: 10, fine: "R$10.000", bail: "Inafiançável" },
-        { name: "Art. 78 - Fuga da Abordagem", sentence: 10, fine: "R$5.000", bail: 0 },
-        { name: "Art. 79 - Perturbação da Ordem Pública", sentence: 10, fine: "R$10.000", bail: 0 },
-        { name: "Art. 80 - Falsidade ideológica", sentence: 25, fine: "R$10.000", bail: 0 },
-        { name: "Art. 81 - Exercício ilegal da profissão", sentence: 20, fine: "R$10.000", bail: 0 },
-        { name: "Art. 82 - Exercer atividade da qual está proibido", sentence: 40, fine: "R$15.000", bail: 0 },
-        { name: "Art. 83 - Abandono de Função", sentence: 30, fine: "R$15.000", bail: 0 },
-        { name: "Art. 84 - Desobediência a autoridade", sentence: 15, fine: "R$5.000", bail: 0 },
+        { name: "Art. 78 - Fuga da Abordagem", sentence: 10, fine: "R$5.000", bail: 50000 },
+        { name: "Art. 79 - Perturbação da Ordem Pública", sentence: 10, fine: "R$10.000", bail: 20000 },
+        { name: "Art. 80 - Falsidade ideológica", sentence: 25, fine: "R$10.000", bail: 50000 },
+        { name: "Art. 81 - Exercício ilegal da profissão", sentence: 20, fine: "R$10.000", bail: 40000 },
+        { name: "Art. 82 - Exercer atividade da qual está proibido", sentence: 40, fine: "R$15.000", bail: 60000 },
+        { name: "Art. 83 - Abandono de Função", sentence: 30, fine: "R$15.000", bail: "Inafiançável" },
+        { name: "Art. 84 - Desobediência a autoridade", sentence: 15, fine: "R$5.000", bail: 60000 },
         { name: "Art. 85 - Desacato leve", sentence: 50, fine: "R$10.000", bail: "Inafiançável" },
         { name: "Art. 85.2 - Desacato medio", sentence: 150, fine: "R$10.000", bail: "Inafiançável" },
         { name: "Art. 85.3 - Desacato Pesado", sentence: 250, fine: "R$10.000", bail: "Inafiançável" },
-        { name: "Art. 86 - Tentativa de Suborno", sentence: 45, fine: "R$20.000", bail: 0 },
+        { name: "Art. 86 - Tentativa de Suborno", sentence: 45, fine: "R$20.000", bail: 80000 },
         { name: "Art. 87 - Corrupção", sentence: 200, fine: "R$50.000", bail: "Inafiançável" },
-        { name: "Art. 88 - Suborno", sentence: 55, fine: "R$25.000", bail: 0 },
-        { name: "Art. 89 - Fraudar Informações", sentence: 45, fine: "R$15.000", bail: 0 },
-        { name: "Art. 90 - Prevaricação", sentence: 50, fine: "R$10.000", bail: 0 },
-        { name: "Art. 91 - Obstrução da Justiça", sentence: 50, fine: "R$15.000", bail: 0 },
+        { name: "Art. 88 - Suborno", sentence: 55, fine: "R$25.000", bail: 120000 },
+        { name: "Art. 89 - Fraudar Informações", sentence: 45, fine: "R$15.000", bail: 70000 },
+        { name: "Art. 90 - Prevaricação", sentence: 50, fine: "R$10.000", bail: 70000 },
+        { name: "Art. 91 - Obstrução da Justiça", sentence: 50, fine: "R$15.000", bail: 60000 },
         { name: "Art. 92 - Abuso de Autoridade", sentence: 50, fine: "R$15.000", bail: "Inafiançável" },
         { name: "Art. 93 - Perjurio, Falso Testemunho", sentence: 15, fine: "R$5.000", bail: 0 },
         { name: "Art. 94 - Iniciar investigação em um indivíduo sabendo que o mesmo é inocente", sentence: 25, fine: "R$20.000", bail: "Inafiançável" },
-        { name: "Art. 95 - Denunciação Caluniosa", sentence: 55, fine: "R$25.000", bail: 0 },
+        { name: "Art. 95 - Denunciação Caluniosa", sentence: 55, fine: "R$25.000", bail: 75000 },
         { name: "Art. 96 - Banco Central", sentence: 100, fine: "R$10.000", bail: "Inafiançável" },
         { name: "Art. 97 - Joalheria", sentence: 70, fine: "R$7.500", bail: "Inafiançável" },
         { name: "Art. 98 - Banco Fleeca", sentence: 80, fine: "R$8.500", bail: "Inafiançável" },
@@ -335,7 +336,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const crimeListDiv = document.getElementById('crime-list');
-        
+        // A lista já está ordenada no array, então não precisamos do sort aqui.
         crimes.forEach((crime, index) => {
             const crimeDiv = document.createElement('div');
             crimeDiv.className = 'crime-item';
@@ -381,23 +382,18 @@
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     }
     
-    
     function clearSelection() {
-       
         document.getElementById('searchInput').value = '';
         filterCrimes(); 
 
-        
         document.querySelectorAll('#crime-list input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
 
-       
         document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
 
-        
         const resultsDiv = document.getElementById('results');
         resultsDiv.innerHTML = "<h3>Resultado</h3><p>Selecione um ou mais crimes e os atenuantes aplicáveis, depois clique em calcular.</p>";
     }
