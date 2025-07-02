@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Calculadora Penal - Fronteira Leste</title>
-    <meta name="description" content="Calculadora de penas, multas e fianças baseada no Código Penal de Fronteira Leste.">
+    <title>Calculadora de Pena - Fronteira Leste</title>
+    <meta name="description" content="Calculadora de penas, multas e fianças do Código Penal da Fronteira Leste.">
     <meta name="author" content="Ministro Sauhan">
     <style>
         :root {
@@ -79,17 +79,32 @@
             border-radius: 5px;
             background-color: #fafafa;
         }
-        .crime-item label, .checkbox-group label {
+        .crime-item label {
             font-weight: normal;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             margin-bottom: 8px;
             cursor: pointer;
+            flex-wrap: wrap;
         }
-        .crime-item input, .checkbox-group input {
+        .crime-item input {
             margin-right: 10px;
             min-width: 16px;
             min-height: 16px;
+            margin-top: 3px;
+        }
+        /* NOVO ESTILO PARA OS DETALHES NA LISTA */
+        .crime-details {
+            font-size: 0.8em;
+            color: #666;
+            margin-left: 5px;
+            font-style: italic;
+        }
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            font-weight: normal;
+            cursor: pointer;
         }
         button {
             width: 100%;
@@ -149,7 +164,7 @@
 <body>
 
     <div class="container">
-        <h1>Calculadora Penal</h1>
+        <h1>Calculadora de Pena</h1>
         <p style="text-align: center; margin-top:-10px; margin-bottom: 20px;">Código Penal de Fronteira Leste</p>
 
         <div class="form-group">
@@ -280,12 +295,27 @@
         crimes.forEach((crime, index) => {
             const crimeDiv = document.createElement('div');
             crimeDiv.className = 'crime-item';
+            
             const label = document.createElement('label');
             const checkbox = document.createElement('input');
             checkbox.type = 'checkbox';
             checkbox.value = index;
+
+            // CRIA O TEXTO COM OS DETALHES DO CRIME
+            const crimeName = document.createElement('div');
+            crimeName.textContent = crime.name;
+            
+            const crimeDetails = document.createElement('span');
+            crimeDetails.className = 'crime-details';
+            crimeDetails.textContent = `(${crime.sentence} meses | Multa: ${crime.fine})`;
+
             label.appendChild(checkbox);
-            label.appendChild(document.createTextNode(crime.name));
+            
+            const textContainer = document.createElement('div');
+            textContainer.appendChild(crimeName);
+            textContainer.appendChild(crimeDetails);
+            
+            label.appendChild(textContainer);
             crimeDiv.appendChild(label);
             crimeListDiv.appendChild(crimeDiv);
         });
@@ -390,9 +420,9 @@
         
         let sentenceHtml = `
             <hr><h3>Cálculo da Pena</h3>
-            <p><strong>Pena Base Total (soma):</strong> ${totalSentence} meses</p>
-            <p><strong>Redução (soma dos atenuantes):</strong> ${totalReduction}%</p>
-            <p><strong>Redução Aplicada (teto de 50%):</strong> ${cappedReduction}%</p>
+            <p style="text-align:center;"><strong>Pena Base Total (soma):</strong> ${totalSentence} meses</p>
+            <p style="text-align:center;"><strong>Redução (soma dos atenuantes):</strong> ${totalReduction}%</p>
+            <p style="text-align:center;"><strong>Redução Aplicada (teto de 50%):</strong> ${cappedReduction}%</p>
             <hr>
             <p style="text-align:center; font-size: 1.2em;"><strong>PENA FINAL: ${finalSentence.toFixed(1).replace('.',',')} meses de prisão</strong></p>
         `;
