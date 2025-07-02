@@ -181,7 +181,7 @@
 
     <div class="container">
         <h1>Calculadora de Pena</h1>
-        <p style="text-align: center; margin-top:-10px; margin-bottom: 20px;">Código Penal de Fronteira Leste</p>
+        <p style="text-align: center; margin-top:-10px; margin-bottom: 20px;">Código Penal da Fronteira Leste</p>
 
         <div class="form-group">
             <label for="searchInput">Buscar Crime:</label>
@@ -213,8 +213,7 @@
         <p class="citation">A redução máxima da pena por atenuantes é de 50%. Fiança quitada isenta da pena de prisão.</p>
     </div>
 
-<script>
-    // LISTA DE CRIMES ATUALIZADA E ORDENADA
+<script>  
     const crimes = [
         { name: "Art. 4 - Atropelamento Culposo", sentence: 10, fine: "R$7.000", bail: "Inafiançável" },
         { name: "Art. 5 - Atropelamento Doloso", sentence: 20, fine: "R$9.000", bail: "Inafiançável" },
@@ -336,7 +335,7 @@
 
     document.addEventListener('DOMContentLoaded', () => {
         const crimeListDiv = document.getElementById('crime-list');
-        // A lista já está ordenada no array, então não precisamos do sort aqui.
+        
         crimes.forEach((crime, index) => {
             const crimeDiv = document.createElement('div');
             crimeDiv.className = 'crime-item';
@@ -382,23 +381,23 @@
         return new Intl.NumberFormat('pt-BR', { style: 'currency', currency: 'BRL' }).format(value);
     }
     
-    // NOVA FUNÇÃO PARA LIMPAR TUDO
+    
     function clearSelection() {
-        // Limpa a busca
+       
         document.getElementById('searchInput').value = '';
-        filterCrimes(); // Mostra todos os crimes novamente
+        filterCrimes(); 
 
-        // Desmarca todos os checkboxes de crimes
+        
         document.querySelectorAll('#crime-list input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
 
-        // Desmarca todos os checkboxes de atenuantes
+       
         document.querySelectorAll('.checkbox-group input[type="checkbox"]').forEach(checkbox => {
             checkbox.checked = false;
         });
 
-        // Limpa a área de resultados
+        
         const resultsDiv = document.getElementById('results');
         resultsDiv.innerHTML = "<h3>Resultado</h3><p>Selecione um ou mais crimes e os atenuantes aplicáveis, depois clique em calcular.</p>";
     }
